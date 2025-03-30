@@ -1,5 +1,6 @@
 import { HiShoppingBag } from "react-icons/hi"
 import { HiArrowPathRoundedSquare } from "react-icons/hi2"
+import { HiOutlineCreditCard } from "react-icons/hi"
 
 const FeaturesSection = () => {
     return <section className="py-16 px-4 bg-white">

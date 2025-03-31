@@ -2,11 +2,10 @@ import { IoMdClose } from "react-icons/io";
 import CartContents from "../Cart/CartContents";
 import { useNavigate } from "react-router-dom";
 
-
-
 const CartDrawer = ({ drawerOpen, toggleCartDrawer}) =>{ 
     const navigate = useNavigate();
     const handleCheckout = () => {
+        toggleCartDrawer()
         navigate("/checkout")
     }
     return (

@@ -42,6 +42,7 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="flex items-center space-x-4">
+                    <Link to="/admin" className="block bg-black px-2 rounded text-sm text-white">Admin</Link>
                     <Link to="/profile" className="hover:text-black">
                         <HiOutlineUser className="h-6 w-6 text-gray-700" />
                     </Link>
@@ -76,16 +77,16 @@ const Navbar = () => {
                 <div className="p-4">
                     <h2 className="text-xl font-semibold mb-4">Menu</h2>
                     <nav classNmae="space-y-4">
-                        <Link to="#" onClick={toggleNavDrawer} className= "block text-gray-600 hover:text-black">
+                        <Link to="#" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             Nintendo
                         </Link>
-                        <Link to="#" onClick={toggleNavDrawer} className= "block text-gray-600 hover:text-black">
+                        <Link to="#" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             PS5
                         </Link>
-                        <Link to="#" onClick={toggleNavDrawer} className= "block text-gray-600 hover:text-black">
+                        <Link to="#" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             TCG
                         </Link>
-                        <Link to="#" onClick={toggleNavDrawer} className= "block text-gray-600 hover:text-black">
+                        <Link to="#" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             Accessories
                         </Link>
                     </nav>

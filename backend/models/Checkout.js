@@ -16,6 +16,10 @@ const checkoutItemSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
+    },
+    quantity: {
+        type: Number,
+        required: true,
     }
 },
     { _id: false }
@@ -54,7 +58,7 @@ const checkoutSchema = new mongoose.Schema({
         default: "pending",
     },
     paymentDetails: {
-        type: mongoose.SchemaTypeOptions.Types.Mixed,
+        type: mongoose.Schema.Types.Mixed,
     },
     isFinalized: {
         type: Boolean,

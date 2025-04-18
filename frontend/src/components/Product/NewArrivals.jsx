@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi"
 import { Link } from "react-router-dom"
+import axios from "axios";
 
 const NewArrivals = () => {
     const scrollRef = useRef(null);
@@ -9,97 +10,20 @@ const NewArrivals = () => {
     const [scrollLeft, setScrollLeft] = useState(false);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
-    const newArrivals = [
-        {
-            _id: "1",
-            name: "The Legends of Zelda",
-            price: 55,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=1",
-                    altText: "Zelda"
-                }
-            ]
-        },
-        {
-            _id: "2",
-            name: "Mario Kart",
-            price: 55,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=2",
-                    altText: "Mario"
-                }
-            ]
-        },
-        {
-            _id: "3",
-            name: "FC-25",
-            price: 55,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=3",
-                    altText: "FC"
-                }
-            ]
-        },
-        {
-            _id: "4",
-            name: "Dynasty Warriors Origins",
-            price: 60,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=4",
-                    altText: "DWO"
-                }
-            ]
-        },
-        {
-            _id: "5",
-            name: "Black Myth Wukong",
-            price: 55,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=5",
-                    altText: "Wukong"
-                }
-            ]
-        },
-        {
-            _id: "6",
-            name: "Pokemon TCG Shrouded Fable Booster Pack",
-            price: 15,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=6",
-                    altText: "Pokemon TCG"
-                }
-            ]
-        },
-        {
-            _id: "7",
-            name: "Pokemon TCG Scarlet & Violet Twilight Masquerade Elite Trainer Box",
-            price: 80,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=7",
-                    altText: "Pokemon TCG Box"
-                }
-            ]
-        },
-        {
-            _id: "8",
-            name: "MicroSDXC Class 10 - 512GB",
-            price: 55,
-            images: [
-                {
-                    url: "https://picsum.photos/500/500?random=8",
-                    altText: "Accessories"
-                }
-            ]
-        },
 
-    ];
+    const [newArrivals, setNewArrivals] = useState([])
+
+    useEffect(() => {
+        const fetchNewArrivals = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`);
+                setNewArrivals(response.data)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchNewArrivals();
+    },[])
     const handleMouseDown = (e) => {
         setIsDragging(true)
         setStartX(e.pageX - scrollRef.current.offsetLeft);
@@ -108,7 +32,7 @@ const NewArrivals = () => {
     const handleMouseMove = (e) => {
         if (!isDragging) return;
         const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = x -startX;
+        const walk = x - startX;
         scrollRef.current.scrollLeft = scrollLeft - walk;
     }
     const handleMouseUporLeave = () => {
@@ -137,7 +61,7 @@ const NewArrivals = () => {
             updateScrollButtons();
             return () => container.removeEventListener("scroll", updateScrollButtons)
         }
-    });
+    }, [newArrivals]);
     return <section className="py-16 px-4 lg:px-0">
         <div className="container mx-auto text-center mb-10 relative">
             <h2 className="text-3xl font-bold mb-4">
@@ -156,9 +80,9 @@ const NewArrivals = () => {
                 >
                     <FiChevronLeft className="text-2xl" />
                 </button>
-                <button 
-                onClick={() => scroll("right")}
-                className={`p-2 rounded border ${canScrollRight ? "bg white text black" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>
+                <button
+                    onClick={() => scroll("right")}
+                    className={`p-2 rounded border ${canScrollRight ? "bg white text black" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>
                     <FiChevronRight className="text-2xl" />
                 </button>
             </div>
@@ -166,12 +90,12 @@ const NewArrivals = () => {
 
         {/* Contents */}
         <div ref={scrollRef}
-            className={`container mx-auto overflow-x-scroll flex space-x-6 relative ${isDragging ?"cursor-grabbing" : "cursor-grab "}`}
+            className={`container mx-auto overflow-x-scroll flex space-x-6 relative ${isDragging ? "cursor-grabbing" : "cursor-grab "}`}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUporLeave}
             onMouseLeave={handleMouseUporLeave}
-            >
+        >
             {newArrivals.map((product) => (
                 <div key={product._id} className="min-w-[100%] sm:min-w-[50%] lg:min-w-[30%] relative">
                     <img src={product.images[0]?.url}

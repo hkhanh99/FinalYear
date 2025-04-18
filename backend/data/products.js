@@ -170,7 +170,7 @@ const products = [
       category: "Game",
       brand: "Nintendo",
       sizes: [],
-      colors: [],
+      colors: ["White","Black"],
       display: [],
       condition: ["New"],
       images: [
@@ -183,7 +183,7 @@ const products = [
           altText: "Animal Crossing: New Horizons",
         },
       ],
-      rating: 5,
+      rating: 4.2,
       numReviews: 14,
     },
     {
@@ -270,7 +270,7 @@ const products = [
       category: "Console",
       brand: "Playstation",
       sizes: ["Normal"],
-      colors: ["Black", "White"],
+      colors: ["Black", "White",],
       display: [],
       condition: ["New"],
       images: [
@@ -344,7 +344,7 @@ const products = [
       condition: ["New"],
       images: [
         {
-          url: "https://picsum.photos/500/500?random=8",
+          url: "https://product.hstatic.net/1000231532/product/deluxe_edition_cho_may_ps5_game_bom_tan_aaa_nhap_vai_hanh_dong_cuc_hay_1c8d32cb972f489dbbcb22e92559d1c9_master.jpg",
           altText: "Black Myth Wukong Deluxe Edition",
         },
       ],

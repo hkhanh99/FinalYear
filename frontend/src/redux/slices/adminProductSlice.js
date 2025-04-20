@@ -29,7 +29,7 @@ export const createProduct = createAsyncThunk("adminProducts/createProduct", asy
 
 //update an existing product
 export const updateProduct = createAsyncThunk("adminProducts/updateProduct", async ({ id, productData }) => {
-    const response = axios.put(`${API_URL}/api/admin/products/${id}`,
+    const response = axios.put(`${API_URL}/api/products/${id}`,
         productData,
         {
             headers: {
@@ -42,7 +42,7 @@ export const updateProduct = createAsyncThunk("adminProducts/updateProduct", asy
 
 //delete a product
 export const deleteProduct = createAsyncThunk("adminProducts/deleteProduct", async (id) => {
-    await axios.delete(`${API_URL}/api/admin/products/${id}`, {
+    await axios.delete(`${API_URL}/api/products/${id}`, {
         headers: { Authorization: USER_TOKEN },
     })
     return id
@@ -81,7 +81,7 @@ const adminProductSlice = createSlice({
                 }
             })
             .addCase(deleteProduct.fulfilled, (state, action) => {
-                state.products = state.product.filter(
+                state.products = state.products.filter(
                     (product) => product._id !== action.payload
                 )
             })

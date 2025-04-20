@@ -1,36 +1,22 @@
-const checkout = {
-    _id: "12323",
-    createdAt: new Date(),
-    checkoutItems: [
-        {
-            productId: "1",
-            name: "Nintendo Switch OLED",
-            color: "black",
-            size: "Normal",
-            price: 300,
-            quantity: 1,
-            image: "https://picsum.photos/150?random=1",
-        },
-        {
-            productId: "2",
-            name: "Nintendo Switch Lite",
-            color: "black",
-            size: "Lite",
-            price: 200,
-            quantity: 1,
-            image: "https://picsum.photos/150?random=2",
-        }
-    ],
-    shippingAddress: {
-        address: "91 Cu Chinh Lan",
-        city: " Da Nang",
-        country: "Viet Nam"
-    },
-}
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {clearCart} from "../redux/slices/cartSlice"
 
 const OrderConfirmationPage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const {checkout} = useSelector((state) => state.checkout)
 
+    //clear cart when order is confirm
+    useEffect(() => {
+        if(checkout && checkout._id) {
+            dispatch(clearCart())
+            localStorage.removeItem("cart")
+        }else {
+            navigate("/my-orders")
+        }
+    },[checkout, dispatch, navigate])
     const calculatedEstimateDelivery = (createdAt) => {
         const orderDate = new Date(createdAt);
         orderDate.setDate(orderDate.getDate() + 10);
@@ -63,7 +49,7 @@ const OrderConfirmationPage = () => {
                 </div>
                 {/* Ordered Items */}
                 <div className="mb-20">
-                    {checkout.checkoutItems.map((item) => (
+                    {checkout?.checkoutItems?.map((item) => (
                         <div key={item.productId} className="flex items-center mb-4">
                             <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md mr-4" />
                             <div>
@@ -80,7 +66,7 @@ const OrderConfirmationPage = () => {
                     ))}
                 </div>
                 {/* Payment Info */}
-                <div className="grid gird-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-8">
                     <div>
                         <h4 className="text-lg font-semibold mb-2">Payment</h4>
                         <p className="text-gray-500">PayPal</p>

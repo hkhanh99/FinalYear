@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import PaypalButton from "./PaypalButton";
 import { useDispatch, useSelector } from "react-redux";
 import { createCheckout } from "../../redux/slices/checkoutSlice";
+import axios from "axios";
+
 
  
 const Checkout = () => {
@@ -43,19 +45,18 @@ const Checkout = () => {
 
     const handlePaymentSuccess = async (details) => {
         try {
-            const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/pay`,
-                {paymentStattus: "paid", paymentDetails: details},
+        console.log("Checkout ID:", checkoutId);
+        console.log("Payment Details:", details);
+            const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`,
+                {paymentStatus: "paid", paymentDetails: details},
                 {
                    headers: {
                     Authorization: `Bearer ${localStorage.getItem("userToken")}`
                    } 
                 }
             )
-            if(response.status === 200) {
                 await handleFinalizeCheckout(checkoutId)
-            } else {
-                console.error(error)
-            }
+               
         } catch (error) {
             console.error(error)
         }
@@ -65,19 +66,16 @@ const Checkout = () => {
     const handleFinalizeCheckout = async (checkoutId) => {
         try {
             const response = await axios.post(
-                `${
-                import.meta.env.VITE_BACKEND_URL
-                }/api/checkout/${checkoutId}/finalize`, {
+                `${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/finalize`,
+                {}, // body rỗng
+                {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
                     }
                 }
             )
-            if(response.status === 200) {
-                navigate("/order-confirmation")
-            } else {
-                console.error(error);
-            }
+            
+            navigate("/order-confirmation")
         } catch (error) {
             console.error(error)
         }

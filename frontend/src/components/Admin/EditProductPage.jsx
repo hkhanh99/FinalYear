@@ -44,11 +44,14 @@ const EditProductPage = () => {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
-        const formData = new formData();
-        formData.append("image", file);
+        if (!file) return; // Thêm kiểm tra nếu không chọn file
+
+        // SỬA LẠI TỪ ĐÂY:
+        const uploadFormData = new FormData(); // 1. Đổi tên biến, 2. Dùng FormData()
+        uploadFormData.append("image", file);
         try {
             setUploading(true)
-            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/upload`, formData,
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/upload`, uploadFormData,
                 {
                     headers: { "Content-Type": "multipart/form-data" }
                 }
@@ -59,7 +62,7 @@ const EditProductPage = () => {
             }));
             setUploading(false);
         } catch (error) {
-            console.error(error);
+            console.error("Image upload error:", error); 
             setUploading(false)
         }
     }

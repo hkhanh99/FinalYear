@@ -31,7 +31,7 @@ export const addUser = createAsyncThunk("admin/addUser", async (userData, { reje
 
 //Update user info
 export const updateUser = createAsyncThunk("admin/updateUser", async ({ id, name, email, role }) => {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/users${id}`,
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/admin/users/${id}`,
         { name, email, role },
         {
             headers: {

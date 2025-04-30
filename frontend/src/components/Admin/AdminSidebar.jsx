@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { clearCart } from "../../redux/slices/cartSlice";
 import { logout } from "../../redux/slices/authSlice";
+import { RiCoupon2Fill } from "react-icons/ri";
 
 const AdminSidebar = () => {
     const navigate = useNavigate();
@@ -37,6 +38,13 @@ const AdminSidebar = () => {
                     <FaBoxOpen/>
                     <span>Products</span>
                 </NavLink>
+                <NavLink to="/admin/addproduct" 
+                className={({isActive}) => 
+                isActive ? "bg-gray-700 text-white py-3 px-4 rounded flex items-center space-x-2" 
+                : "text-gray-300 hover:bg-gray-700 hover:text-white py-3 px-4 rounded flex items-center space-x-2"}>
+                    <FaBoxOpen/>
+                    <span>Add Products</span>
+                </NavLink>
                 <NavLink to="/admin/orders" 
                 className={({isActive}) => 
                 isActive ? "bg-gray-700 text-white py-3 px-4 rounded flex items-center space-x-2" 
@@ -50,6 +58,13 @@ const AdminSidebar = () => {
                 : "text-gray-300 hover:bg-gray-700 hover:text-white py-3 px-4 rounded flex items-center space-x-2"}>
                     <FaStore/>
                     <span>Store</span>
+                </NavLink>
+                <NavLink to="/admin/coupons" 
+                className={({isActive}) => 
+                isActive ? "bg-gray-700 text-white py-3 px-4 rounded flex items-center space-x-2" 
+                : "text-gray-300 hover:bg-gray-700 hover:text-white py-3 px-4 rounded flex items-center space-x-2"}>
+                    <RiCoupon2Fill/>
+                    <span>Coupon</span>
                 </NavLink>
             </nav>
             <div className="mt-6">

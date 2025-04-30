@@ -14,6 +14,7 @@ const protect = async(req, res, next)=>{
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
             req.user = await User.findById(decoded.user.id).select("-password");
+            console.log('User fetched in protect middleware:', JSON.stringify(req.user, null, 2));
                 next();
         }catch (error) {
             console.error("Token verification failed:", error);

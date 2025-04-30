@@ -36,32 +36,40 @@ const ProductDetails = ({ productId }) => {
         if (action === "minus" && quantity > 1) setQuantity((prev) => prev - 1)
     }
     const handleAddtoCart = () => {
-        if (!selectedColor) {
-            toast.error("Please select a color before purchase.", {
-                duration: 1000,
-            });
-            return;
-        }
-
-        setIsButtonDisabled(true);
-        dispatch(
-            addToCart({
-                productId: productFetchId,
-                quantity,
-                color: selectedColor,
-                guestId,
-                userId: user?._id,
-                price: selectedProduct.price
-            })
-        ).then(() => {
+    const requiresColor = selectedProduct?.colors && selectedProduct.colors.length > 0;
+    if (requiresColor && !selectedColor) {
+        toast.error("Please select a color for this product.", {
+            duration: 1000,
+        });
+        return; 
+    }
+    setIsButtonDisabled(true);
+    const itemData = {
+        productId: productFetchId,
+        quantity,
+        ...(requiresColor && selectedColor && { color: selectedColor }),
+        guestId,
+        userId: user?._id,
+        price: selectedProduct.price
+    };
+    console.log("Adding to cart with data:", itemData);
+    dispatch(addToCart(itemData))
+        .unwrap() 
+        .then(() => {
             toast.success("Product added to the cart", {
                 duration: 1000,
-            })
+            });
         })
-            .finally(() => {
-                setIsButtonDisabled(false)
-            })
-    }
+        .catch((error) => {
+
+            console.error("Failed to add to cart:", error);
+            toast.error(error?.message || "Failed to add product to cart.");
+        })
+        .finally(() => {
+            setIsButtonDisabled(false);
+        });
+}
+
     if (loading) {
         return <p>Loading...</p>
     }

@@ -67,11 +67,11 @@ const products = [
       condition: ["Used"],
       images: [
         {
-          url: "https://picsum.photos/500/500?random=41",
+          url: "../assets/nintendo_switch_lite_gray1.webp",
           altText: "Nintendo Switch Lite Gray",
         },
         {
-          url: "https://picsum.photos/500/500?random=42",
+          url: "../assets/may_game_nintendo_switch_lite_gray2.png",
           altText: "Nintendo Switch Lite Gray",
         },
       ],
@@ -170,7 +170,7 @@ const products = [
       category: "Game",
       brand: "Nintendo",
       sizes: [],
-      colors: ["White","Black"],
+      colors: [],
       display: [],
       condition: ["New"],
       images: [

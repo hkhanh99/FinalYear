@@ -81,7 +81,7 @@ router.put("/", async (req, res) => {
         let cart = await getCart(userId, guestId);
         if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-        const productIndex = cart.products.findIndex((p) => p.productId.toString() === productId && size && p.color === color);
+        const productIndex = cart.products.findIndex((p) => p.productId.toString() === productId && p.size === size && p.color === color);
 
         if (productIndex > -1) {
             if (quantity > 0) {

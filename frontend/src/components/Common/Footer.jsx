@@ -24,23 +24,23 @@ const Footer = () => {
                 <h3 className="text-lg text-gray-800 mb-4">Shop</h3>
                 <ul className="space-y-2 text-gray-600">
                     <li>
-                        <Link to="#" className="hover:text-gray-600 transition-colors">
+                        <Link to="/collections/all?brand=Nintendo" className="hover:text-gray-600 transition-colors">
                             Nintendo
                         </Link>
                     </li>
                     <li>
-                        <Link to="#" className="hover:text-gray-600 transition-colors">
+                        <Link to="/collections/all?brand=Playstation" className="hover:text-gray-600 transition-colors">
                             PS5
                         </Link>
                     </li>
                     <li>
-                        <Link to="#" className="hover:text-gray-600 transition-colors">
-                            TCG
+                        <Link to="/collections/all?category=Console" className="hover:text-gray-600 transition-colors">
+                            Consoles
                         </Link>
                     </li>
                     <li>
-                        <Link to="#" className="hover:text-gray-600 transition-colors">
-                            Accessories
+                        <Link to="/collections/all?category=Game" className="hover:text-gray-600 transition-colors">
+                            Games
                         </Link>
                     </li>
                 </ul>

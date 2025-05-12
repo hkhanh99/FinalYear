@@ -12,27 +12,23 @@ const AddEditCouponForm = ({ initialData, onSubmit, onClose, isLoading }) => {
         minPurchaseAmount: 0,
         maxUsageLimit: null, // null = không giới hạn
         isActive: true,
-        // Thêm các trường khác nếu cần
     });
 
-    const isEditing = !!initialData; // Cờ xác định là thêm hay sửa
+    const isEditing = !!initialData; 
 
     useEffect(() => {
         if (isEditing && initialData) {
-            // Nếu là sửa, điền dữ liệu vào form
             setFormData({
                 code: initialData.code || '',
                 description: initialData.description || '',
                 discountType: initialData.discountType || 'percentage',
                 discountValue: initialData.discountValue || 0,
-                // Format lại ngày tháng cho input type="date" hoặc "datetime-local"
                 expiryDate: initialData.expiryDate ? new Date(initialData.expiryDate).toISOString().slice(0, 16) : '',
                 minPurchaseAmount: initialData.minPurchaseAmount || 0,
-                maxUsageLimit: initialData.maxUsageLimit === null ? '' : initialData.maxUsageLimit, // Hiển thị '' nếu là null
+                maxUsageLimit: initialData.maxUsageLimit === null ? '' : initialData.maxUsageLimit, 
                 isActive: initialData.isActive !== undefined ? initialData.isActive : true,
             });
         } else {
-             // Nếu là thêm, reset form
              setFormData({
                 code: '', description: '', discountType: 'percentage', discountValue: 0,
                 expiryDate: '', minPurchaseAmount: 0, maxUsageLimit: null, isActive: true,
@@ -50,13 +46,12 @@ const AddEditCouponForm = ({ initialData, onSubmit, onClose, isLoading }) => {
 
      const handleNumberChange = (e) => {
         const { name, value } = e.target;
-        // Xử lý giá trị null cho maxUsageLimit
         if (name === 'maxUsageLimit' && value === '') {
              setFormData(prev => ({ ...prev, maxUsageLimit: null }));
         } else {
             setFormData(prev => ({
                 ...prev,
-                [name]: value === '' ? '' : Number(value) // Chuyển thành số hoặc giữ chuỗi rỗng
+                [name]: value === '' ? '' : Number(value) 
             }));
         }
     };
@@ -64,26 +59,22 @@ const AddEditCouponForm = ({ initialData, onSubmit, onClose, isLoading }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Validate cơ bản
         if (!formData.code || !formData.discountType || formData.discountValue <= 0 || !formData.expiryDate) {
             toast.error("Please fill in all required fields (Code, Type, Value > 0, Expiry Date).");
             return;
         }
-
-         // Chuyển đổi maxUsageLimit về null nếu là chuỗi rỗng
          const dataToSubmit = {
             ...formData,
             maxUsageLimit: formData.maxUsageLimit === '' || formData.maxUsageLimit === null ? null : Number(formData.maxUsageLimit),
-            discountValue: Number(formData.discountValue), // Đảm bảo là số
-            minPurchaseAmount: Number(formData.minPurchaseAmount) // Đảm bảo là số
+            discountValue: Number(formData.discountValue), 
+            minPurchaseAmount: Number(formData.minPurchaseAmount) 
         };
 
 
-        onSubmit(dataToSubmit); // Gọi hàm submit được truyền từ component cha
+        onSubmit(dataToSubmit); 
     };
 
     return (
-        // Nên đặt form này trong một component Modal
         <form onSubmit={handleSubmit} className="space-y-4 p-4">
              <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Coupon' : 'Add New Coupon'}</h2>
 

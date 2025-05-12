@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const FilterSidebar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
     const [filters, setFilters] = useState(
         {
             category: "",
@@ -17,7 +16,7 @@ const FilterSidebar = () => {
     );
 
     const [priceRange, setPriceRange] = useState([0, 500]);
-    const categories = ["Games", "Console"];
+    const categories = ["Game", "Console"];
     const colors = [
         "Red",
         "Black",
@@ -26,64 +25,125 @@ const FilterSidebar = () => {
         "Gray",
         "White",
         "Pink",
-
-    ]
+        "Blue"
+    ];
     const displays = ["OLED", "FULL HD"];
     const conditions = ["New", "Used"];
-    const sizes = ["Normal", "Lite"]
+    const sizes = ["Normal", "Lite"];
 
     useEffect(() => {
-        const params = Object.fromEntries([...searchParams]);
-        setFilters({
-            category: params.category || "",
-            color: params.color || "",
-            size: params.size || "",
-            condition: params.condition || "",
-            display: params.display || "",
-            minPrice: params.minPrice || 0,
-            maxPrice: params.maxPrice || 500,
-        })
-        setPriceRange([0, params.maxPrice || 500])
+        const paramsFromUrl = Object.fromEntries([...searchParams]);
+        const defaultSidebarFilters = {
+            category: "",
+            size: "",
+            condition: "",
+            color: "",
+            display: "",
+            minPrice: 0,
+            maxPrice: 500,
+        };
+
+        let newInitialFilters = {};
+        Object.keys(defaultSidebarFilters).forEach(key => {
+            if (paramsFromUrl[key] !== undefined) {
+                if (key === "minPrice" || key === "maxPrice") {
+                    newInitialFilters[key] = Number(paramsFromUrl[key]);
+                } else {
+                    
+                    if (typeof paramsFromUrl[key] === 'string' && (key === "size" || key === "color")) {
+                         newInitialFilters[key] = paramsFromUrl[key];
+                    } else {
+                        newInitialFilters[key] = paramsFromUrl[key];
+                    }
+                }
+            } else {
+                newInitialFilters[key] = defaultSidebarFilters[key];
+            }
+        });
+
+        setFilters(newInitialFilters);
+        setPriceRange([newInitialFilters.minPrice, newInitialFilters.maxPrice]);
     }, [searchParams]);
 
     const handleFilterChange = (e) => {
         const { name, value, checked, type } = e.target;
-        let newFilters = { ...filters };
+        let newFiltersState = { ...filters };
 
         if (type === "checkbox") {
+       
+            const currentValues = Array.isArray(newFiltersState[name]) ? newFiltersState[name] : (newFiltersState[name] ? [newFiltersState[name]] : []);
             if (checked) {
-                newFilters[name] = [...(newFilters[name] || []), value];
+                newFiltersState[name] = [...currentValues, value];
             } else {
-                newFilters[name] = newFilters[name].filter((item) => item !== value);
+                newFiltersState[name] = currentValues.filter((item) => item !== value);
             }
+       
         } else {
-            newFilters[name] = value
+            newFiltersState[name] = value;
         }
-        setFilters(newFilters)
-        UpdateURLParams(newFilters)
-    }
+        setFilters(newFiltersState);
+        UpdateURLParams(newFiltersState);
+    };
 
-    const UpdateURLParams = (newFilters) => {
-        const params = new URLSearchParams();
-        Object.keys(newFilters).forEach((key) => {
-            if(Array.isArray(newFilters[key]) && newFilters[key].length > 0) {
-                params.append(key, newFilters[key].join(","));
-            } else if (newFilters[key]) {
-                params.append(key, newFilters[key]);
+    const UpdateURLParams = (newFiltersFromState) => {
+        const params = new URLSearchParams(searchParams.toString());
+        const defaultSidebarValues = {
+            category: "",
+            size: "",
+            condition: "",
+            color: "",
+            display: "",
+            minPrice: 0,
+            maxPrice: 500, 
+        };
+        Object.keys(newFiltersFromState).forEach((key) => {
+            const value = newFiltersFromState[key]; 
+            if (Array.isArray(value)) {
+                if (value.length > 0) {
+                    params.set(key, value.join(",")); 
+                } else {
+                    params.delete(key); 
+                }
+            }
+            else if (key === "minPrice") {
+                if (Number(newFiltersFromState.maxPrice) < defaultSidebarValues.maxPrice) {
+                    params.set(key, String(value)); 
+                } else {
+                    params.delete(key);
+                }
+            } else if (key === "maxPrice") {
+                if (Number(value) < defaultSidebarValues.maxPrice) {
+                    params.set(key, String(value));
+                } else {
+                    params.delete(key);
+                }
+            }
+            else if (defaultSidebarValues.hasOwnProperty(key)) { 
+                if (value !== undefined && value !== null && String(value) !== defaultSidebarValues[key] && String(value) !== "") {
+                    params.set(key, String(value));
+                } else {
+                    params.delete(key);
+                }
             }
         });
-        setSearchParams(params);
-        navigate(`?${params.toString()}`)
-    }
+        if (params.get("minPrice") === "0" && params.get("maxPrice") === String(defaultSidebarValues.maxPrice)) {
+            params.delete("minPrice");
+            params.delete("maxPrice");
+        }
+        
+        setSearchParams(params, { replace: true });
+    };
 
     const handlePriceChange = (e) => {
-        const newPrice = e.target.value;
-        setPriceRange([0, newPrice])
-        const newFilters = {...filters, minPrice: 0, maxPrice: newPrice};
-        setFilters(filters);
-        UpdateURLParams(newFilters)
+        const newMaxPrice = e.target.value; 
+        setPriceRange([filters.minPrice, newMaxPrice]); 
 
-    }
+        const newFiltersForUpdate = { ...filters, maxPrice: Number(newMaxPrice) };
+       
+        const updatedFiltersWithPrice = {...filters, minPrice: 0, maxPrice: Number(newMaxPrice)};
+        setFilters(updatedFiltersWithPrice); 
+        UpdateURLParams(updatedFiltersWithPrice); 
+    };
 
     return (
         <div className="p-4">
@@ -103,6 +163,15 @@ const FilterSidebar = () => {
                         <span className="text-gray-700">{category}</span>
                     </div>
                 ))}
+                 {/* Nút xóa bộ lọc category */}
+                 {filters.category && (
+                    <button 
+                        onClick={() => handleFilterChange({ target: { name: 'category', value: '' }})}
+                        className="text-xs text-blue-500 hover:text-blue-700 mt-1"
+                    >
+                        Clear Category
+                    </button>
+                )}
             </div>
             {/* Size */}
             <div className="mb-6">
@@ -119,6 +188,14 @@ const FilterSidebar = () => {
                         <span className="text-gray-700">{size}</span>
                     </div>
                 ))}
+                {filters.size && (
+                    <button 
+                        onClick={() => handleFilterChange({ target: { name: 'size', value: '' }})}
+                        className="text-xs text-blue-500 hover:text-blue-700 mt-1"
+                    >
+                        Clear Size
+                    </button>
+                )}
             </div>
             {/* Condition */}
             <div className="mb-6">
@@ -135,6 +212,14 @@ const FilterSidebar = () => {
                         <span className="text-gray-700">{condition}</span>
                     </div>
                 ))}
+                {filters.condition && (
+                    <button 
+                        onClick={() => handleFilterChange({ target: { name: 'condition', value: '' }})}
+                        className="text-xs text-blue-500 hover:text-blue-700 mt-1"
+                    >
+                        Clear Condition
+                    </button>
+                )}
             </div>
             {/* Display */}
             <div className="mb-6">
@@ -151,6 +236,14 @@ const FilterSidebar = () => {
                         <span className="text-gray-700">{display}</span>
                     </div>
                 ))}
+                {filters.display && (
+                    <button 
+                        onClick={() => handleFilterChange({ target: { name: 'display', value: '' }})}
+                        className="text-xs text-blue-500 hover:text-blue-700 mt-1"
+                    >
+                        Clear Display
+                    </button>
+                )}
             </div>
             {/* Colors */}
             <div className="mb-6">
@@ -158,34 +251,45 @@ const FilterSidebar = () => {
                 <div className="flex flex-wrap gap-2">
                     {colors.map((color) => (
                         <button
+                            type="button" 
                             key={color}
-                            name="color"
-                            value={color}
-                            onClick={handleFilterChange}
+                            name="color" 
+                            value={color} 
+                            onClick={handleFilterChange} 
                             className={`w-8 h-8 rounded-full border border-gray-300 cursor-pointer transition hover:scale-105
-                            ${filters.color === color ? "ring-2 ring-blue-500" : "" }`}
-                            style={{ backgroundColor: color.toLowerCase() }}></button>
+                            ${filters.color === color ? "ring-2 ring-offset-1 ring-blue-500" : ""}`}
+                            style={{ backgroundColor: color.toLowerCase() }}
+                            title={color}
+                        />
                     ))}
                 </div>
+                {filters.color && (
+                    <button 
+                        onClick={() => handleFilterChange({ target: { name: 'color', value: '' }})}
+                        className="text-xs text-blue-500 hover:text-blue-700 mt-2" // Thêm mt-2 cho khoảng cách
+                    >
+                        Clear Color
+                    </button>
+                )}
             </div>
             {/* Price Range */}
             <div className="mb-8">
                 <label className="block text-gray-600 font-medium mb-2">
-                    Price Range
+                    Price Range: ${filters.minPrice} - ${priceRange[1]} 
                 </label>
                 <input
-                    type="range" 
-                    name="priceRange" 
-                    min={0} max={500}
-                    value= {priceRange[1]}
+                    type="range"
+                    name="priceRangeSlider"
+                    min={0} max={500} 
+                    value={priceRange[1]}
                     onChange={handlePriceChange}
-                    className="w-full h-2 bg-gray-300 rounded-lg apperance-none cursor-pointer" />
+                    className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" />
                 <div className="flex justify-between text-gray-600 mt-2">
                     <span>$0</span>
-                    <span>${priceRange[1]}</span>
+                    <span>$500</span>
                 </div>
             </div>
-        </div>)
+        </div>);
 
-}
+};
 export default FilterSidebar;

@@ -7,14 +7,16 @@ import CartDrawer from "../Layout/CartDrawer";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
+import { MdCompareArrows } from "react-icons/md";
 
 const Navbar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-    const {cart} = useSelector((state) => state.cart)
-    const {user} = useSelector((state) => state.auth)
-
-    const cartItemCount = cart?.products?.reduce((total, product) => total + product.quantity,0)||0;
+    const { cart } = useSelector((state) => state.cart)
+    const { user } = useSelector((state) => state.auth)
+    const { productIdsToCompare } = useSelector((state) => state.comparison || { productIdsToCompare: [] });
+    const cartItemCount = cart?.products?.reduce((total, product) => total + product.quantity, 0) || 0;
+    const compareItemCount = productIdsToCompare?.length || 0;
 
     const toggleNavDrawer = () => {
         setNavDrawerOpen(!navDrawerOpen);
@@ -60,13 +62,23 @@ const Navbar = () => {
                         {cartItemCount > 0 && (<span className="absolute -top-1 bg-red text-white text-xs rounded-full px-2 py-0.5">
                             {cartItemCount}
                         </span>)}
-                        
+
                     </button>
 
                     {/* Search */}
                     <div className="overflow-hidden">
                         <SearchBar />
                     </div>
+
+                    {/* Compare Products Button */}
+                    <Link to="/compare" className="relative text-gray-700 hover:text-blue-600 transition-colors" title="Compare Products">
+                        <MdCompareArrows className="h-6 w-6" />
+                        {compareItemCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+                                {compareItemCount}
+                            </span>
+                        )}
+                    </Link>
 
                     <button onClick={toggleNavDrawer} className="md:hidden">
                         <HiBars3BottomRight className="h-6 w-6 text-gray-700" />
@@ -84,7 +96,7 @@ const Navbar = () => {
                 </div>
                 <div className="p-4">
                     <h2 className="text-xl font-semibold mb-4">Menu</h2>
-                    <nav classNmae="space-y-4">
+                    <nav className="space-y-4">
                         <Link to="/collections/all?brand=Nintendo" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             Nintendo
                         </Link>
@@ -96,6 +108,14 @@ const Navbar = () => {
                         </Link>
                         <Link to="/collections/all?category=Game" onClick={toggleNavDrawer} className="block text-gray-600 hover:text-black">
                             Game
+                        </Link>
+                        <Link to="/compare" onClick={toggleNavDrawer} className="block py-2 px-3 rounded-md text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors relative">
+                            So Sánh Sản Phẩm
+                            {compareItemCount > 0 && (
+                                <span className="ml-2 bg-blue-500 text-white text-xs font-semibold rounded-full h-5 w-5 inline-flex items-center justify-center">
+                                    {compareItemCount}
+                                </span>
+                            )}
                         </Link>
                     </nav>
                 </div>

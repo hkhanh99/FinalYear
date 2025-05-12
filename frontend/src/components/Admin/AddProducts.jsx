@@ -251,8 +251,8 @@ const AddProductPage = () => {
                     <label className="block font-semibold mb-2">Display <span className="text-sm text-gray-500">(comma-separated)</span></label>
                     <input
                         type="text"
-                        name="tags"
-                        value={productData.tags.join(", ")}
+                        name="display"
+                        value={productData.display.join(", ")}
                         onChange={handleListChange}
                         className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="e.g., new, sale, featured"

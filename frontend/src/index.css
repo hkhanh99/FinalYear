@@ -6,7 +6,7 @@
   font-style: normal;
 }
 @theme {
-  --color-red: #ea2e0e; /* Màu đỏ */
-  --color-secondary: #00ff00; /* Màu xanh lá cây */
-  --color-accent: #0000ff; /* Màu xanh dương */
+  --color-red: #ea2e0e; 
+  --color-secondary: #00ff00; 
+  --color-accent: #0000ff; 
 }

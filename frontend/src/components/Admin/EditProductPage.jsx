@@ -44,10 +44,10 @@ const EditProductPage = () => {
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
-        if (!file) return; // Thêm kiểm tra nếu không chọn file
+        if (!file) return; 
 
-        // SỬA LẠI TỪ ĐÂY:
-        const uploadFormData = new FormData(); // 1. Đổi tên biến, 2. Dùng FormData()
+     
+        const uploadFormData = new FormData(); 
         uploadFormData.append("image", file);
         try {
             setUploading(true)

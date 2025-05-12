@@ -19,6 +19,7 @@ import EditProductPage from "./components/Admin/EditProductPage"
 import OrderManagement from "./components/Admin/OrderManagement"
 import AddNewProduct from "./components/Admin/AddProducts"
 import AdminCouponListPage from "./components/Admin/AdminCouponListPage"
+import ComparisonPage from "./pages/ComparisonPage"
 
 import { Provider } from "react-redux";
 import store from "./redux/store"
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="order-confirmation" element={<OrderConfirmationPage />} />
             <Route path="order/:id" element={<OrderDetailsPage />} />
             <Route path="my-orders" element={<MyOrdersPage />} />
+            <Route path="compare" element={<ComparisonPage/>}/>
           </Route>
           <Route path="/admin" element={<ProtectedRoute role ="admin">
             <AdminLayout />

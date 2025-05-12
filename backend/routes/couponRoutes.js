@@ -8,12 +8,12 @@ const asyncHandler = require('express-async-handler');
 
 // @desc    Validate a coupon code submitted by user
 // @route   POST /api/coupons/validate
-// @access  Public (hoặc Private nếu dùng 'protect')
+// @access  Private
 router.post('/validate',  protect,  asyncHandler(async (req, res) => {
     const { couponCode, cartTotal } = req.body;
 
     if (!couponCode) {
-        res.status(400); // Bad Request
+        res.status(400); 
         throw new Error('Vui lòng nhập mã giảm giá');
     }
     const numericCartTotal = Number(cartTotal);
@@ -27,7 +27,7 @@ router.post('/validate',  protect,  asyncHandler(async (req, res) => {
     const coupon = await Coupon.findOne({ code: code });
 
     if (!coupon) {
-        res.status(404); // Not Found
+        res.status(404); 
         throw new Error(`Mã giảm giá "${couponCode}" không tồn tại.`);
     }
 

@@ -14,6 +14,7 @@ const productAdminRoutes = require("./routes/productAdminRoutes")
 const adminOrderRoutes = require("./routes/adminOrderRoutes")
 const couponAdminRoutes = require("./routes/couponAdminRoutes");
 const couponRoutes = require("./routes/couponRoutes"); 
+const compareRoutes = require("./routes/compareRoutes")
 
 
 const app = express();
@@ -31,7 +32,7 @@ app.get("/", (req, res) => {
     res.send("WELCOME TO GAMESTORE API!");
 });
 
-//API route
+//Customer route
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
@@ -39,6 +40,7 @@ app.use("/api/checkout", checkoutRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api", subscribeRoutes);
+app.use('/api/compare', compareRoutes);
 
 //admin route
 app.use("/api/admin/users", adminRoutes)

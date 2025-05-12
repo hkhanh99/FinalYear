@@ -1,6 +1,7 @@
 const express = require("express")
 const Product = require("../models/Product")
 const { protect, admin } = require("../middleware/authMiddleware")
+const {mongoose} = require('mongoose')
 
 const router = express.Router();
 
@@ -143,6 +144,7 @@ router.get("/", async (req, res) => {
             display,
             condition,
             category,
+            brand,
             minPrice,
             maxPrice,
             sortBy,
@@ -155,6 +157,10 @@ router.get("/", async (req, res) => {
 
         if (category && category.toLocaleLowerCase() !== "all") {
             query.category = category
+        }
+        if (brand) { 
+            // query.brand = brand;
+            query.brand = { $regex: new RegExp(`^${brand}$`, 'i') };           
         }
         if (size) {
             query.sizes = { $in: [size] };
@@ -237,6 +243,46 @@ router.get("/new-arrivals", async (req, res) => {
         res.status(500).send("Server Error")
     }
 })
+// GET /api/products/batch-details?ids=id1,id2,id3
+// Fetches details for multiple products based on a list of IDs
+router.get('/batch-details', async (req, res) => {
+    try {
+        let productIds = req.query.ids; // Expecting IDs as a comma-separated string or an array
+
+        if (!productIds) {
+            return res.status(400).json({ message: 'Product IDs are required.' });
+        }
+
+        // If productIds is a comma-separated string, convert it to an array
+        if (typeof productIds === 'string') {
+            productIds = productIds.split(',').map(id => id.trim());
+        }
+
+        // Validate ObjectIds (optional but good practice)
+        const validProductIds = productIds.filter(id => mongoose.Types.ObjectId.isValid(id));
+
+        if (validProductIds.length === 0 && productIds.length > 0) {
+            return res.status(400).json({ message: 'No valid product IDs provided.' });
+        }
+        if (validProductIds.length !== productIds.length) {
+            console.warn('Some invalid product IDs were filtered out:', productIds.filter(id => !mongoose.Types.ObjectId.isValid(id)));
+            // You might choose to inform the client or just proceed with valid ones
+        }
+
+        // Fetch products from the database
+        // Using .lean() for better performance if you don't need Mongoose document methods
+        const products = await Product.find({ '_id': { $in: validProductIds } }).lean();
+
+        if (!products || products.length === 0) {
+            return res.json([]);
+        }
+        res.json(products); 
+
+    } catch (error) {
+        console.error('Error fetching batch product details:', error);
+        res.status(500).json({ message: 'Server error while fetching product details.' });
+    }
+});
 
 // Get Products by ID
 router.get("/:id", async (req, res) => {
@@ -274,5 +320,6 @@ router.get("/similar/:id", async (req, res) => {
         res.status(500).send("Server Error")
     }
 })
+
 
 module.exports = router;

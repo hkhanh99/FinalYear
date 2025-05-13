@@ -36,39 +36,43 @@ const ProductDetails = ({ productId }) => {
         if (action === "minus" && quantity > 1) setQuantity((prev) => prev - 1)
     }
     const handleAddtoCart = () => {
-    const requiresColor = selectedProduct?.colors && selectedProduct.colors.length > 0;
-    if (requiresColor && !selectedColor) {
-        toast.error("Please select a color for this product.", {
-            duration: 1000,
-        });
-        return; 
-    }
-    setIsButtonDisabled(true);
-    const itemData = {
-        productId: productFetchId,
-        quantity,
-        ...(requiresColor && selectedColor && { color: selectedColor }),
-        guestId,
-        userId: user?._id,
-        price: selectedProduct.price
-    };
-    console.log("Adding to cart with data:", itemData);
-    dispatch(addToCart(itemData))
-        .unwrap() 
-        .then(() => {
-            toast.success("Product added to the cart", {
+        if (user && user.role === 'admin') {
+            toast.error("Admin does not have the rights to add product to cart");
+            return; 
+        }
+        const requiresColor = selectedProduct?.colors && selectedProduct.colors.length > 0;
+        if (requiresColor && !selectedColor) {
+            toast.error("Please select a color for this product.", {
                 duration: 1000,
             });
-        })
-        .catch((error) => {
+            return;
+        }
+        setIsButtonDisabled(true);
+        const itemData = {
+            productId: productFetchId,
+            quantity,
+            ...(requiresColor && selectedColor && { color: selectedColor }),
+            guestId,
+            userId: user?._id,
+            price: selectedProduct.price
+        };
+        console.log("Adding to cart with data:", itemData);
+        dispatch(addToCart(itemData))
+            .unwrap()
+            .then(() => {
+                toast.success("Product added to the cart", {
+                    duration: 1000,
+                });
+            })
+            .catch((error) => {
 
-            console.error("Failed to add to cart:", error);
-            toast.error(error?.message || "Failed to add product to cart.");
-        })
-        .finally(() => {
-            setIsButtonDisabled(false);
-        });
-}
+                console.error("Failed to add to cart:", error);
+                toast.error(error?.message || "Failed to add product to cart.");
+            })
+            .finally(() => {
+                setIsButtonDisabled(false);
+            });
+    }
 
     if (loading) {
         return <p>Loading...</p>
@@ -129,7 +133,7 @@ const ProductDetails = ({ productId }) => {
                         <div className="mb-4">
                             <p className="text-gray-700">Color:</p>
                             <div className="flex gap-2 mt-2">
-                               
+
                                 {selectedProduct?.colors?.map((color) => (
                                     <button
                                         key={color}

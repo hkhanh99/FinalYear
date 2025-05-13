@@ -23,7 +23,7 @@ const CollectionPage = () => {
 
     const handleClickOutside = (e) => {
         // Click outside close sidebar
-        if (sidebarRef.current && !sidebarRef.current.contains(e.tagrget)) {
+        if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
             setIsSidebarOpen(false)
         }
     }

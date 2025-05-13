@@ -16,7 +16,7 @@ const GenderCollection = () => {
                         <h2 className="text-2xl font-bold text-gray-900 mb-3">
                             PlayStation's Collection
                         </h2>
-                        <Link to="/collections/all?gender=PS" className="text-gray-900 underline">
+                        <Link to="/collections/all?brand=Playstation" className="text-gray-900 underline">
                             Shop Now
                         </Link>
                     </div>
@@ -32,7 +32,7 @@ const GenderCollection = () => {
                         <h2 className="text-2xl font-bold text-gray-900 mb-3">
                             Nintendo's Collection
                         </h2>
-                        <Link to="/collections/all?gender=Nintendo" className="text-gray-900 underline">
+                        <Link to="/collections/all?brand=Nintendo" className="text-gray-900 underline">
                             Shop Now
                         </Link>
                     </div>

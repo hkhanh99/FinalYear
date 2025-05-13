@@ -13,11 +13,11 @@ const CouponInput = () => {
   } = useSelector((state) => state.cart);
 
   const {
-    code: appliedCode, // Mã coupon đang được áp dụng
+    code: appliedCode, 
     discountAmount,
-    isValidating,      // Cờ báo đang gọi API
-    validationError,   // Lỗi trả về
-    validationMessage, // Thông báo thành công trả về
+    isValidating,      
+    validationError,   
+    validationMessage, 
   } = coupon;
 
  
@@ -28,10 +28,10 @@ const CouponInput = () => {
     if (appliedCode && validationMessage) {
        toast.success(validationMessage, { id: 'coupon-success' });
     }
-  }, [validationError, validationMessage, appliedCode]); // Thêm appliedCode vào dependency
+  }, [validationError, validationMessage, appliedCode]); 
 
   const handleApplyCoupon = (e) => {
-    e.preventDefault(); // Ngăn form submit lại trang
+    e.preventDefault(); 
     const codeToValidate = couponCodeInput.trim();
     if (!codeToValidate) {
       toast.error('Vui lòng nhập mã giảm giá.');
